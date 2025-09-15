@@ -54,15 +54,27 @@ categorical_cols = model_package['categorical_cols']
 
 st.header("Please input patient's clinical indicators:")
 
-age = st.number_input('Age', min_value=18, max_value=85, value=50)
-height = st.number_input('Height (cm)', min_value=145, max_value=185, value=165)
-weight = st.number_input('Weight (kg)', min_value=40, max_value=100, value=65)
-diseases = st.number_input('Number of Comorbid Diseases', min_value=0, max_value=7, value=1)
-medications = st.number_input('Number of Concomitant Medications', min_value=0, max_value=5, value=1)
-gender = st.selectbox('Gender', ['Female', 'Male'])
-location = st.selectbox('Treatment Type', ['Outpatient', 'Inpatient'])
-education = st.selectbox('Education Level', ['Primary School or Below', 'High School', 'College or Above'])
-stroke = st.selectbox('History of Stroke', ['No', 'Yes'])
+# Using text_input to ensure empty initial state
+def number_or_none(label, key, placeholder="Enter value"):
+    raw = st.text_input(label, value="", key=key, placeholder=placeholder)
+    if raw.strip() == "":
+        return None
+    try:
+        return float(raw)
+    except ValueError:
+        st.error(f"Invalid value for {label}. Please enter a valid number.")
+        return None
+
+# Inputs
+age = number_or_none('Age', 'age')
+height = number_or_none('Height (cm)', 'height')
+weight = number_or_none('Weight (kg)', 'weight')
+diseases = number_or_none('Number of Comorbid Diseases', 'diseases')
+medications = number_or_none('Number of Concomitant Medications', 'medications')
+gender = st.selectbox('Gender', ['Female', 'Male'], index=None, placeholder="Select Gender")
+location = st.selectbox('Treatment Type', ['Outpatient', 'Inpatient'], index=None, placeholder="Select Treatment Type")
+education = st.selectbox('Education Level', ['Primary School or Below', 'High School', 'College or Above'], index=None, placeholder="Select Education Level")
+stroke = st.selectbox('History of Stroke', ['No', 'Yes'], index=None, placeholder="Select Stroke History")
 
 predict_button = st.button('Predict')
 
